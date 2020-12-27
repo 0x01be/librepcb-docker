@@ -6,14 +6,13 @@ RUN apk add --no-cache --virtual librepcb-build-dependencies \
     build-base \
     libressl-dev \
     zlib-dev \
-    qt5-qtbase-dev
-
-RUN git clone --recursive --branch ${REVISION} https://github.com/LibrePCB/LibrePCB.git /librepcb
+    qt5-qtbase-dev \
+    qt5-qtsvg-dev &&\
+    git clone --recursive --branch ${REVISION} https://github.com/LibrePCB/LibrePCB.git /librepcb
 
 WORKDIR /librepcb/build
 
-RUN apk add qt5-qtsvg-dev
-
-RUN qmake-qt5 -r ../librepcb.pro
-RUN make
+RUN qmake-qt5 -r ../librepcb.pro PREFIX=/opt/librepcb &&\
+    make
 RUN make install
+
