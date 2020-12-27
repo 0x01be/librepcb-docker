@@ -1,19 +1,15 @@
-FROM 0x01be/base
+FROM 0x01be/librepcb:build as build
 
-ENV REVISION=master
-RUN apk add --no-cache --virtual librepcb-build-dependencies \
-    git \
-    build-base \
-    libressl-dev \
-    zlib-dev \
-    qt5-qtbase-dev
+FROM 0x01be/xpra
 
-RUN git clone --recursive --branch ${REVISION} https://github.com/LibrePCB/LibrePCB.git /librepcb
+COPY --from=build /opt/librepcb/ /opt/librepcb/
 
-WORKDIR /librepcb/build
+RUN apk add --no-cache --virtual librepcb-runtime-dependencies \
+    libressl \
+    zlib \
+    qt5-qtbase
 
-RUN apk add qt5-qtsvg-dev
+USER ${USER}
+ENV PATH=${PATH}:/opt/librepcb/bin/ \
+    COMMAND=librepcb
 
-RUN qmake-qt5 -r ../librepcb.pro
-RUN make
-RUN make install
