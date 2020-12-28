@@ -8,7 +8,9 @@ RUN apk add --no-cache --virtual librepcb-runtime-dependencies \
     libressl \
     zlib \
     qt5-qtbase \
-    qt5-qtsvg
+    qt5-qtsvg \
+    qt5-qtbase-sqlite \
+    mesa-dri-swrast
 
 USER ${USER}
 ENV PATH=${PATH}:/opt/librepcb/bin/ \
